@@ -32,9 +32,9 @@ Tomando por base os critérios mencionados no item 3, passou-se a definição da
 
 \begin{table}[]
 	\centering
-	\begin{tabular}{|l|c|}
+	\begin{tabular}{l|c}
 		\hline
-		\multicolumn{1}{|c|}{DESCRIÇÃO} & ESPECIFICAÇÃO                                                                                            \\ \hline
+		\multicolumn{1}{c}{DESCRIÇÃO} & ESPECIFICAÇÃO                                                                                            \\ \hline
 		Máquina Física                  & \begin{tabular}[c]{@{}c@{}}Mac OS High Sierra 10.13.4 /\\ i5 2.4Ghz 10 GB RAM 1333 MHz DDR3\end{tabular} \\ \hline
 		Oracle VirtualBox               & Versão 5.2.8                                                                                             \\ \hline
 		Docker                          & Versão                                                                                                   \\ \hline
@@ -55,5 +55,58 @@ Tomando por base os critérios mencionados no item 3, passou-se a definição da
 \end{itemize}
 
 
+\section{Arquitetura e Pipeline}
+
+Para desenvolvimento do processo de deploy utilizar-se-á a seguinte arquitetura, que envolve desde a referência de repositório Git até o provisionamento e entrega.
+
+\begin{figure} [htb]
+	\centering
+	\includegraphics[width=1.05\linewidth]{imagens/MODELODEPLOY}
+	\caption{Representação da Arquitetura Proposta}
+	Fonte: Acervo próprio
+	\label{fig:modelodeploy}
+\end{figure}
 
 
+Considerando o modelo apresentado na figura 5, temos como sequenciamento mais detalhado, as etapas a seguir, absorvendo desde o início de uma requisição até a disponibilização da aplicação em servidor de produção.
+\begin{enumerate}
+	\item No ponto de partida, é pre-requisito a existência de conteúdo codificado em linguagem de programação, que permita o versionamento do projeto.
+	\item O desenvolvedor faz a requisição de um novo repositório através de um formulário, que contenha as informações pertinentes, tais como, chave ssh, membros do projeto e nome do mesmo;
+	\item A requisição é recebida pelo provedor que verifica os dados de solicitação, avalia a disponibilidade de repositório;
+	\item O provedor valida a disponibilidade e cria um novo repositório no GitHub;
+	\item O link do repositório é retornado ao usuário juntamente com sua chave de autenticação;
+	\item O desenvolvedor envia os commits e o GitHub gera uma notificação de alteração ao Jenkins;
+	\item Jenkins recebe a notificação (Git Fetch – Git Merge – Templates Ansible – Dry Run – Commit Check);
+	\item O Jenkins realiza teste jundo ao contêiner Docker destinado para tanto;
+	\item Jenkins gera um histórico (Notificação aos Administradores);
+	\item Administrador analisa os logs de testes;
+	\item GitHub gera nova notificação ao Jenkins;
+	\item Jenkins gera novo release e gera nova tag de versão;
+	\item Estando as alterações aprovadas o Jenkins realiza deploy da aplicação em um contêiner Docker destinado a produção;
+\end{enumerate}
+
+Analogamente, um pipeline para essa arquitetura pode ser representado pelo seguinte fluxo:
+.
+
+.
+
+
+O processo inicia com a chamada de uma nova requisição do código-fonte do aplicativo do repositório Github em questão. Após isso faz-se a atualização da versão do projeto levando-se em conta o número de compilação, assim tem-se uma identificação digital específica para essa implantação. Após a atualização da versão do projeto, o Jenkins inicia a construção do código fonte utilizando o Maven.
+
+\section{Métricas}
+
+A definição de mecanismos que forneçam e possibilitem a análise estatística de todo o processo é fundamental dentro deste projeto. Nesse sentido, o uso de métricas é necessário para que se tenha uma visão próxima de cada processo de deploy. Serão adotadas nesse projeto as seguintes métricas expostas na tabela ??:
+
+
+\begin{table}[htb]
+	\begin{tabular}{l|c}
+		\hline
+		\multicolumn{1}{c}{MÉTRICA} & DESCRIÇÃO \\ \hline
+		Tempo de deploy & \begin{tabular}[c]{@{}c@{}}Critério utilizado para avaliar o tempo gasto\\  para uma atualização de aplicação entrar em produção\end{tabular} \\ \hline
+		\begin{tabular}[c]{@{}l@{}}Quantidade de linhas de código\\ adicionadas\end{tabular} & \begin{tabular}[c]{@{}c@{}}Critério utilizado para definir o tamanho\\ da atualização enviada.\end{tabular} \\ \hline
+		Relação tempo x custo & \begin{tabular}[c]{@{}c@{}}Critério utilizado para mensurar o valor monetário da\\ unidade de tempo gasto pela produtividade\end{tabular} \\ \hline
+		\begin{tabular}[c]{@{}l@{}}Desempenho frente a múltiplos\\ deploys\end{tabular} & \begin{tabular}[c]{@{}c@{}}Medição do desempenho obtido frente\\ à um estresse de deploys simultâneos\end{tabular} \\ \hline
+		Memória utilizada & \begin{tabular}[c]{@{}c@{}}Quantidade de memória reservada destinada ao\\ processo de deploy\end{tabular} \\ \hline
+	\end{tabular}
+\caption{Métricas adotadas}
+\end{table}

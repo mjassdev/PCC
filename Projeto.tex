@@ -69,7 +69,8 @@
 
 %\usepackage[brazilian,hyperpageref]{backref}	 % Paginas com as citações na bibl
 \usepackage[alf,abnt-etal-list=2 ]{abntex2cite}	% Citações padrão ABNT
-
+\usepackage{listings}
+\usepackage{verbatim}
 
 \usepackage[table]{xcolor}
 \definecolor{lightgray}{gray}{0.9}
@@ -200,6 +201,8 @@
 \include{c_conclusao}
 
 
+
+
 % ----------------------------------------------------------
 % ELEMENTOS PÓS-TEXTUAIS
 % ----------------------------------------------------------
@@ -210,7 +213,7 @@
 % Referências bibliográficas
 % ----------------------------------------------------------
 \bibliography{bibliografia}
-
+\include{Apendices}
 %---------------------------------------------------------------------
 \phantompart
 \printindex
