@@ -3,10 +3,14 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: Projeto.aux
 A level-1 auxiliary file: pre_textuais.aux
 A level-1 auxiliary file: c_introducao.aux
+A level-1 auxiliary file: c_justificativa.aux
+A level-1 auxiliary file: c_problema.aux
+A level-1 auxiliary file: c_objetivos.aux
 A level-1 auxiliary file: c_referencial.aux
 A level-1 auxiliary file: c_metodologia.aux
 A level-1 auxiliary file: c_resultados.aux
 A level-1 auxiliary file: c_conclusao.aux
+A level-1 auxiliary file: Apendices.aux
 The style file: abntex2-alf.bst
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
@@ -28,44 +32,44 @@ Reallocated glb_str_end (elt_size=4) to 20 items from 10.
 | Em caso de dúvidas ou problemas com este estilo procure |
 | http://www.abntex.net.br/                               |
 +---------------------------------------------------------+
-You've used 17 entries,
+You've used 18 entries,
             6714 wiz_defined-function locations,
-            1269 strings with 11708 characters,
-and the built_in function-call counts, 10996 in all, are:
-= -- 913
-> -- 276
+            1277 strings with 11968 characters,
+and the built_in function-call counts, 11620 in all, are:
+= -- 958
+> -- 291
 < -- 6
-+ -- 143
-- -- 90
-* -- 654
-:= -- 1570
-add.period$ -- 48
-call.type$ -- 17
-change.case$ -- 111
-chr.to.int$ -- 21
-cite$ -- 15
-duplicate$ -- 582
-empty$ -- 1017
-format.name$ -- 409
-if$ -- 2653
++ -- 148
+- -- 95
+* -- 690
+:= -- 1658
+add.period$ -- 51
+call.type$ -- 18
+change.case$ -- 117
+chr.to.int$ -- 22
+cite$ -- 16
+duplicate$ -- 620
+empty$ -- 1080
+format.name$ -- 432
+if$ -- 2804
 int.to.chr$ -- 3
 int.to.str$ -- 1
-missing$ -- 300
-newline$ -- 70
-num.names$ -- 75
-pop$ -- 403
+missing$ -- 319
+newline$ -- 74
+num.names$ -- 80
+pop$ -- 428
 preamble$ -- 1
-purify$ -- 54
+purify$ -- 57
 quote$ -- 0
-skip$ -- 672
+skip$ -- 708
 stack$ -- 1
-substring$ -- 344
-swap$ -- 223
+substring$ -- 361
+swap$ -- 237
 text.length$ -- 4
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 96
+while$ -- 102
 width$ -- 0
-write$ -- 224
+write$ -- 238

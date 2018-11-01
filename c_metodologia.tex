@@ -11,9 +11,10 @@ No âmbito desse estudo, é proposta uma arquitetura para implantação de hospe
 
 Para a eleição das ferramentas escolhidas foi levado em conta, a sua disponibilização de código open source, a flexibilidade no uso e confiabilidade nos resultados, as suas vantagens e desvantagens, a aceitação junto a comunidade científica e a documentação disponível, seja por meio de livros ou artigos publicados ou por contribuições junto a comunidade web.
 
-O processo de escolha das ferramentas teve como ponto inicial estar em consonância com atuabilidade do mercado de TI e ter continua contribuição da comunidade web. Sendo assim, o primeiro critério a ser considerado foi como a ferramenta daria suporte às diversas linguagens de programações disponíveis. Outro fator relevante está atrelado a maneira como o produto pode ser adquirido, mais diretamente, ao custo necessário para fazer uso da ferramenta. A premissa é que as mesmas deveriam possuir versão open source (gratuita) que  dessem suporte às necessidades da arquitetura proposta.
+O processo de escolha das ferramentas teve como ponto inicial estar em consonância com atuabilidade do mercado de TI e ter continua contribuição da comunidade web. Sendo assim, o primeiro critério a ser considerado foi como a ferramenta daria suporte às diversas linguagens de programações disponíveis. Outro fator relevante está atrelado a maneira como o produto pode ser adquirido, mais diretamente, ao custo necessário para fazer uso da ferramenta. A premissa é que as mesmas deveriam possuir versão open source que  dessem suporte às necessidades da arquitetura proposta.
 
-Dessa forma, alguns requisitos foram considerados na escolha, os pontos citados a seguir nortearam o estudo: 
+Dessa forma, alguns requisitos foram considerados na escolha, os pontos citados a seguir nortearam a escolha: 
+    \vspace*{0.5cm}
 
 \begin{itemize}
 	
@@ -23,90 +24,188 @@ Dessa forma, alguns requisitos foram considerados na escolha, os pontos citados 
 	
 \end{itemize}
 
+    \vspace*{0.5cm}
 
 \section{Materiais Utilizados}
 
-Tomando por base os critérios mencionados no item 3, passou-se a definição das ferramentas, sendo essas:
+Tomando por base os critérios mencionados no item 6, passou-se a definição das ferramentas, sendo essas:
 
 
 
-\begin{table}[]
+\begin{table}[htb]
+	    \vspace*{0.5cm}
+	
 	\centering
 	\begin{tabular}{l|c}
 		\hline
 		\multicolumn{1}{c}{DESCRIÇÃO} & ESPECIFICAÇÃO                                                                                            \\ \hline
 		Máquina Física                  & \begin{tabular}[c]{@{}c@{}}Mac OS High Sierra 10.13.4 /\\ i5 2.4Ghz 10 GB RAM 1333 MHz DDR3\end{tabular} \\ \hline
 		Oracle VirtualBox               & Versão 5.2.8                                                                                             \\ \hline
-		Docker                          & Versão                                                                                                   \\ \hline
-		Ansible                         & Versão                                                                                                   \\ \hline
+		Docker                          & Versão  17.12.0-ce                                                                                                 \\ \hline
 		GitHub                          & Serviço Web: www.github.com                                                                              \\ \hline
+		SonarQube                          & Plugin Jenkins Versão 2.8.1                                           \\ \hline
+		Jenkins                          & Versão 2.11.2                                        \\ \hline
+		Kubernetes                          & Plugin Jenkins - Minikube Versão 1.11                                           \\ \hline
 	\end{tabular}
 \caption{Ferramentas utilizadas}
 \end{table}
 
 \begin{itemize}
+	    \vspace*{0.5cm}
 	
 \item VirutalBox: Criação de máquinas virtuais para testes. Serão construídas máquinas virtuais para execução dos hosts clientes e servidores;
 \item GitHub: Versionamento e repositório. Esse serviço receberá os códigos das aplicações dos desenvolvedores;
-\item Ansible: Gerenciamento de configuração e orquestração da rotina. Essa ferramenta será responsável por administrar as rotinas dentro de todo o processo de deploy. Será executado em uma máquina virtual com Sistema Operacional Ubuntu Linux 64 bits.
 \item Jenkins: Automatização da execução de tarefas e testes de implantação. O Jenkins será executado em uma máquina virtual com Sistema Operacional Ubuntu Linux 64 bits.
-\item Docker: Contêineres para armazenamento das aplicações e testes. O Docker será executado em uma máquina virtual com Sistema Operacional Ubuntu Linux 64 bits.
+\item Docker: Contêineres para armazenamento das aplicações e serviços. O Docker será executado em uma máquina virtual com Sistema Operacional Ubuntu Linux 64 bits.
+\item Kubernetes: Recurso utilizado para criar nós ou slaves, destinados a dividir o peso de compilação, evitando a sobrecarga no nó master do Jenkins, utilizar-se-á versão Minikube.
+\item Sonar: Plugin de análise estatística do build, com ele será possível coletar resultado das métricas definidas para resultados.
 
 \end{itemize}
 
+    \vspace*{0.5cm}
 
-\section{Arquitetura e Pipeline}
+\section{Arquitetura }
 
-Para desenvolvimento do processo de deploy utilizar-se-á a seguinte arquitetura, que envolve desde a referência de repositório Git até o provisionamento e entrega.
-
-\begin{figure} [htb]
+Para o ritmo do processo de deploy será considerada a arquitetura representada na figura 8, que envolve desde a requisição do ambiente por meio de formulário até o provisionamento e entrega.
+Toda a arquitetura é gerida e orquestrada pelo Ansible desde uma nova mudança no repositório do GitHub até o envio para produção.
+\\
+\begin{figure}
 	\centering
-	\includegraphics[width=1.05\linewidth]{imagens/MODELODEPLOY}
+	\includegraphics[width=1\linewidth]{imagens/pipelinejenkins}
 	\caption{Representação da Arquitetura Proposta}
-	Fonte: Acervo próprio
-	\label{fig:modelodeploy}
+Fonte: Acervo próprio
+	\label{fig:pipelinejenkins}
+\end{figure}
+
+Considerando o modelo apresentado na figura 8, pontuaremos cada etapa a fim de detalhar o fluxo da disponibilização ao usuário final. O simbolo de infinito encontrado no na mesma figura, indica que o fluxo nesse ponto é contínuo e se repete a cada nova interação.
+
+\begin{enumerate}
+	\item No ponto de partida, é pre-requisito a existência de conteúdo codificado em linguagem de programação, que permita o versionamento do projeto.
+	\item O desenvolvedor faz a requisição de um novo ambiente através de formulário web, que contenha as informações pertinentes, tais como link do repositório, dependências do projeto e informações de acesso à aplicação.
+	\item A requisição é recebida pelo provedor que verifica os dados de solicitação, avalia a disponibilidade de repositório;
+	\item O desenvolvedor envia os commits e o GitHub gera uma notificação de alteração ao Jenkins;
+	\item Jenkins recebe a notificação (Git Fetch – Git Merge – Dry Run – Commit Check);
+	\item O Jenkins cria instâncias diferentes para construir o projeto, para isso, faz uso do Kubernetes;
+	\item O Jenkins incia o build e realiza testes automatizados;
+	\item O gestor é notificado quanto aos logs e status do build;
+	\item O gestor homologa ou não o build;
+	\item Jenkins gera novo release e nova tag de versão;
+\item O Ansible informa ao Docker para construir uma nova imagem da aplicação e a envia para um repositório no Docker Hub\footnote{Disponível em: https://hub.docker.com/}
+	\item Estando as alterações aprovadas o Jenkins através do Ansible realiza deploy da aplicação em um contêiner Docker destinado a produção;
+\end{enumerate}
+
+O processo inicia com a chamada de uma nova requisição do código-fonte do aplicativo do repositório Github em questão. Após isso faz-se a atualização da versão do projeto levando-se em conta o número de compilação, assim tem-se uma identificação digital específica para essa implantação. Após a atualização da versão do projeto, o Jenkins inicia a construção do código fonte.
+    \vspace*{0.5cm}
+
+\section{Descrição do Serviço de Integração Contínua}
+
+A fim de criar uma plataforma que possibilitasse a construção e configuração de um ambiente replicável, auto escalável e ágil, foi utilizado o conceito da infraestrutura como código, ou \textit{"as-a-code"}. Nesse sentido, vislumbrou-se um serviço que reunisse as ferramentas Docker, Jenkins e Kubernetes sob orquestração do Ansible para realizar a execução do processo de deploy bem como o provisionamento do ambiente com a instalação dos serviços, dependências e configurações com a chamada do arquivo Dockerfile que faz a instalação das dependências para o ambiente Jenkins, bem como as chaves de acesso, instalação de plugins, busca por jobs, e criação dos devidos contêineres Docker. 
+
+O ponto de partida é a criação do \textit{Formulário de Solicitação de Ambiente de Desenvolvimento}, no qual o usuário sinalizará a pretensão de alocação de sua aplicação em servidor web local. Os dados informados nesse formulário gerarão um arquivo \textit{.json} que será lido pela API do Jenkins a fim de se criar um novo Job para esse repositório, esse ponto será mais detalhado na subseção 3.3.1.
+
+Os arquivos fundamentais desse projeto são primeiramente o playbook (cd.yml) do Ansible, ele é responsável por fazer a instalação do Docker e baixar a imagem Jenkins, e então iniciar o processo de configuração do ambiente chamando o Dockerfile mencionado anteriormente. É necessário criar uma conta no Docker Hub\footnote{hub.docker.com}, esse será o repositório onde as imagens Docker serão exportadas e servirá como controle de versionamento da imagens\footnote{Nesse caso o repositório fará versionamento da imagem do serviço, não do código-fonte, esse será feito diretamente no GitHub}.
+
+A imagem do Jenkins foi construída com o objetivo da mesma ser replicável e auto-escalável, isso quer dizer que a mesma possui configurações genéricas e, portanto, aplicável em qualquer tarefa a ser executada, sendo os \textit{Playbooks }Ansible de cada serviço responsável por suprir as dependências de cada projeto não disponíveis no Jenkins.
+
+O arquivo Dockerfile traz o script utilizado para construir as imagens Docker e mapear os volumes externos utilizados pelo Jenkins, como arquivos de configuração e base de dados, além disso esse arquivo inicia os contêineres dos serviços com o comando "run". O arquivo \textit{plugins.txt}\footnote{vide Apêndice A} mapeado para um desses volumes traz uma lista de plugins que serão instalados em tempo de execução no build da imagem, assim o Ansible somente instalará plugins mencionados no formulário e que não conste nessa lista, nesse caso é realizado um novo build da imagem para atualizar a lista de plugins e/ou demais configurações.
+
+Na raiz do projeto estão os arquivos de configuração do Jenkins. Nesses, estarão os parâmetros necessários para iniciar o serviço do Jenkins sem a necessidade de reconfigurar toda a ferramenta ao reinicio de cada instância. Essa forma de configuração torna o serviço reaproveitável, ou seja, tanto é possível criar um padrão inicial definido para demais projetos do Jenkins, quanto utilizá-lo para execução dos mais diversos tipos de jobs, desde o mais básico ao mais complexo, alocando somente o recurso necessário para cada iteração, dessa forma não se desperdiça recurso computacional para os builds mais simples e utilizam-se instâncias diferentes do Jenkins através de \textit{slaves} orquestrados pelo Kubernetes para construções que demandam mais poder computacional.
+    \vspace*{0.5cm}
+
+\subsection{Pipeline do Build}
+
+Para início do processo de build do código, é necessário antes de tudo que esteja disponível um repositório de versionamento de códigos, definido aqui com a plataforma do GitHub. Essa sinalização será concebida por meio de um \textit{Formulário de Solicitação de Ambiente de Desenvolvimento}. Esse formulário será disponibilizado por um endereço web, onde é premissa que o usuário já possua um repositório para o projeto no GitHub, e preencha os demais campos solicitados do formulário. É requerido desde o nome do responsável pelo projeto até as dependências necessária para execução do mesmo. Essa busca pelos Jobs são feitas pela API do Jenkins semelhantemente ao REST.
+
+Nesse sentido a API pode ser usada para:
+
+\begin{itemize}
+	\item Recuperar informações de Jenkins para consumo programático;
+	\item Desencadear uma nova compilação;
+	\item Criar ou copiar Jobs.
+\end{itemize}
+
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=1\linewidth]{imagens/formulario}
+	\caption{Formulário Web para Solicitação de Provisionamento de Ambiente}
+	\label{fig:formulario}
+	
 \end{figure}
 
 
-Considerando o modelo apresentado na figura 5, temos como sequenciamento mais detalhado, as etapas a seguir, absorvendo desde o início de uma requisição até a disponibilização da aplicação em servidor de produção.
-\begin{enumerate}
-	\item No ponto de partida, é pre-requisito a existência de conteúdo codificado em linguagem de programação, que permita o versionamento do projeto.
-	\item O desenvolvedor faz a requisição de um novo repositório através de um formulário, que contenha as informações pertinentes, tais como, chave ssh, membros do projeto e nome do mesmo;
-	\item A requisição é recebida pelo provedor que verifica os dados de solicitação, avalia a disponibilidade de repositório;
-	\item O provedor valida a disponibilidade e cria um novo repositório no GitHub;
-	\item O link do repositório é retornado ao usuário juntamente com sua chave de autenticação;
-	\item O desenvolvedor envia os commits e o GitHub gera uma notificação de alteração ao Jenkins;
-	\item Jenkins recebe a notificação (Git Fetch – Git Merge – Templates Ansible – Dry Run – Commit Check);
-	\item O Jenkins realiza teste jundo ao contêiner Docker destinado para tanto;
-	\item Jenkins gera um histórico (Notificação aos Administradores);
-	\item Administrador analisa os logs de testes;
-	\item GitHub gera nova notificação ao Jenkins;
-	\item Jenkins gera novo release e gera nova tag de versão;
-	\item Estando as alterações aprovadas o Jenkins realiza deploy da aplicação em um contêiner Docker destinado a produção;
-\end{enumerate}
+O Pipeline de um projeto baseia-se num fluxo iniciado na alteração do estado do código-fonte em um repositório até a disponibilização do software em produção. Esse processo tem por natureza um fluxo contínuo da cadeia de comandos da Integração Contínua. Iniciando, o Jenkins é responsável por monitorar o repositório GitHub a fim de verificar alteração no estado do código do projeto utilizando recurso de \textit{Push Notification} já próprio da ferramenta, ou seja, se houveram \textit{commits} no mesmo, o Jenkins atualiza a versão do projeto de acordo com o número de compilação, dessa forma garantisse uma assinatura única da construção durante o processo de implantação. Após atualizar a versão do código partiremos para a construção do mesmo.
 
-Analogamente, um pipeline para essa arquitetura pode ser representado pelo seguinte fluxo:
-.
+Tendo sucesso na compilação, partiremos para a construção do projeto. Após o Jenkins identificar uma alteração no código, o mesmo clona o projeto do repositório, e escalona diferentes estâncias desse mesmo serviço, fazendo o papel de \textit{slaves} e o \textit{master} faz o papel de orquestrador, esse processo retira o peso e custo computacional, se o projeto fosse compilado somente em uma instância master do Jenkins, assim o build é distribuído entre os \textit{slaves} e ao final do processo realiza o \textit{merge} do projeto, esse processo é gerenciado pelo \textit{Kubernetes}, utilizando sua versão \textit{Minikube}.
 
-.
+Parte-se então para os testes da aplicação, nesse ponto o fluxo funciona de forma que testes automatizados sejam aplicados e na incidência de erros o Jenkins dispara uma notificação via email para o usuário, ou gestor da equipe de desenvolvimento, informando a causa da falha e o respectivo log, caso contrário se os testes lograrem sucesso o Ansible recebe o build do Jenkins e realiza o depósito em um ambiente de homologação com Docker. Simultaneamente a isso o gestor do projeto é notificado sobre o sucesso da construção e solicita que o mesmo acesse esse ambiente para a devida homologação. Sendo aprovada as alterações realizadas, o gestor libera a nova versão para ambiente de produção, então o Jenkins recebe a confirmação e sinaliza ao Ansible que solicitará ao Docker a construção de uma nova imagem da aplicação e exportará a mesma para o Docker Hub onde ficará armazena em repositório na nuvem (é também possível fazer essa guarda e versinamento em repositório local) e então é realizado o deploy da imagem em ambiente de produção e iniciado um contêiner do mesma, a partir dai o software já está disponível para acesso pelo usuário final, caso ocorra erro no deploy o gestor é notificado. Esse fluxo pode ser mais claramente entendido na representação da figura 10.
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=1\linewidth]{imagens/pipelinebuild}
+	\caption{Pipeline do Build}
+	\label{fig:pipelinebuild}
+\end{figure}
 
 
-O processo inicia com a chamada de uma nova requisição do código-fonte do aplicativo do repositório Github em questão. Após isso faz-se a atualização da versão do projeto levando-se em conta o número de compilação, assim tem-se uma identificação digital específica para essa implantação. Após a atualização da versão do projeto, o Jenkins inicia a construção do código fonte utilizando o Maven.
+Durante todo o processo o SonarQube realiza o monitoramento e coleta dos resultados obtidos em todas as etapas do deploy, ao fim do processo é possível verificar nesse ambiente as estatísticas, tomando por base as métricas definidas. Isso dará uma visão mais próxima no que tange o desempenho e qualidade do deploy da aplicação.
 
+\section{Pseudo-códigos dos Algoritmos Implementados}
+
+Afim de organização os playbooks foram agrupados por categorias, sendo o playbook cd.yml o responsável pela chamada dos demais. Cada Playbook é constituído por diversas funções que identificam o tipo da dependência ou serviço, sua versão, se existe repositório específico ou se o Ansible fará a gestão deste, e a definição da tag que identifica a qual serviço essa função pertence.
+
+
+O pseudo-código 1 faz menção a execução do playbook inicial do Ansible, nele será solicitado a execução de cada um dos demais playbooks que dizem respeito aos serviços necessário para o ambiente:
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=1\linewidth]{imagens/algoritmo1}
+\end{figure}
+
+    \vspace*{2cm}
+
+O Pseudo-código 2 trata da execução de cada playbook de serviço, onde verifica-se cada função que trata as dependências exigidas para que esse serviço possa funcionar:
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=1\linewidth]{imagens/algoritmo2}
+\end{figure}
+
+    \pagebreak[4]
+
+O Pseudo-código 3 busca por Jobs em um diretório mapeado pelo contêiner Docker de cada serviço, nesse diretório serão armazenados os arquivos .json gerados com o preenchimento do formulário de solicitação de ambiente de desenvolvimento:	
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=1\linewidth]{imagens/algoritmo3}
+\end{figure}
+
+\vspace*{2cm}
+    
+O Pseudo-código 4 trata da execução dos Jobs no Jenkins, onde passa pela busca de jobs no diretório, baixa o código do repositório git informado no formulário, gera uma nova versão do código e se autorizado pelo gestor, executa o contêiner:	
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=1\linewidth]{imagens/algoritmo4}
+\end{figure}
+
+
+
+    \pagebreak[4]
 \section{Métricas}
 
-A definição de mecanismos que forneçam e possibilitem a análise estatística de todo o processo é fundamental dentro deste projeto. Nesse sentido, o uso de métricas é necessário para que se tenha uma visão próxima de cada processo de deploy. Serão adotadas nesse projeto as seguintes métricas expostas na tabela ??:
+A definição de mecanismos que forneçam e possibilitem a análise estatística de todo o processo é fundamental dentro deste projeto. Nesse sentido, o uso de métricas é necessário para que se tenha uma visão próxima de cada processo de deploy. Serão adotadas nesse projeto as seguintes métricas expostas na tabela 3:
 
 
-\begin{table}[htb]
+\begin{table}[h]
+	\small
 	\begin{tabular}{l|c}
 		\hline
-		\multicolumn{1}{c}{MÉTRICA} & DESCRIÇÃO \\ \hline
-		Tempo de deploy & \begin{tabular}[c]{@{}c@{}}Critério utilizado para avaliar o tempo gasto\\  para uma atualização de aplicação entrar em produção\end{tabular} \\ \hline
-		\begin{tabular}[c]{@{}l@{}}Quantidade de linhas de código\\ adicionadas\end{tabular} & \begin{tabular}[c]{@{}c@{}}Critério utilizado para definir o tamanho\\ da atualização enviada.\end{tabular} \\ \hline
-		Relação tempo x custo & \begin{tabular}[c]{@{}c@{}}Critério utilizado para mensurar o valor monetário da\\ unidade de tempo gasto pela produtividade\end{tabular} \\ \hline
+		\multicolumn{1}{c|}{MÉTRICA} & DESCRIÇÃO \\ \hline
+		Tempo de Deploy & \begin{tabular}[c]{@{}c@{}}Critério utilizado para avaliar o tempo gasto para\\ uma atualização de aplicação entrar em produção\end{tabular} \\ \hline
+		Taxa de erros & Ocorrência de erros retornados durante a execução\\dos Jobs. \\ \hline
 		\begin{tabular}[c]{@{}l@{}}Desempenho frente a múltiplos\\ deploys\end{tabular} & \begin{tabular}[c]{@{}c@{}}Medição do desempenho obtido frente\\ à um estresse de deploys simultâneos\end{tabular} \\ \hline
-		Memória utilizada & \begin{tabular}[c]{@{}c@{}}Quantidade de memória reservada destinada ao\\ processo de deploy\end{tabular} \\ \hline
+		\begin{tabular}[c]{@{}l@{}}Recurso computacional \\consumido utilizando diferentes\\instâncias de Slaves.\end{tabular} & \begin{tabular}[c]{@{}c@{}}Quantidade de recursos de memória e processamento\\utilizados entre os slaves para concluir a tarefa iniciada.\end{tabular} \\ \hline
 	\end{tabular}
-\caption{Métricas adotadas}
+\caption{Métricas Definidas}
 \end{table}
+
+
+Os resultados das métricas definidas são importantes pois com isso é possível ter noção muito próxima da "saúde" do código, pontos de fragilidade, potenciais melhorias, eventuais de melhorias nos recursos físicos e previsão de tempo de entrega de uma funcionalidade. Esses pontos dão suporte para tomadas de decisões por parte do gestor do projeto. Em se tratando do SonarQube a própria ferramenta já traz uma série de métricas pré-definidas e genéricas que podem ser aplicadas aos mais diversos tipos de jobs, e nesse ponto é importante ressaltar que é possível a criação de scripts específicos de testes de acordo com o tipo de tarefa que está sendo executada no build, no entanto o foco aqui não foi a implementação dos testes, mas sim a provisão do ambiente de automatização.

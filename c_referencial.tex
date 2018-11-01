@@ -84,6 +84,18 @@ Segundo Matthias e Kane, no livro Primeiros Passos com Docker, essa ferramenta c
 
 O Docker é uma plataforma Open Source, que não pode ser confundido com um ambiente tradicional de virtualização. No Docker fazemos uso de recurso isolados que utilizam bibliotecas do kernel em comum, isso porque é presente nessa ferramenta o Linux Containers (LXC).
 
+\begin{figure} [htb]
+	\centering
+	
+	\includegraphics[width=0.8\linewidth]{imagens/dockerXvm}
+	\caption{Comparativo Docker x Máquinas Virtuais}
+	Fonte: Bright Computing\footnotemark
+	\label{fig:dockerXvm}
+	
+	\footnotetext{Disponível em: http://www.brightcomputing.com/blog/containerization-vs.-virtualization-heres-our-blog-smackdown}
+\end{figure}
+
+
 O mesmo permite empacotar a aplicação ou um ambiente em um contêiner e movê-lo para qualquer outro host que possua o Docker instalado, tornando assim uma ferramenta portável. A grande vantagem disso é que não há necessidade de reconfigurar todo o ambiente novamente, visto que todo ele é movido, reduzindo acentuadamente o tempo de deploy de uma infraestrutura.
 
 
@@ -102,19 +114,15 @@ Podemos elencar alguns ganhos consideráveis na utilização do Docker \cite{sca
 \item Uso de softwares sem onerar recursos demasiados, visto que o contêiner é apenas um processo que se comunica diretamente com kernel do Linux.
 \end{itemize}
 
-\begin{figure} [htb]
+\begin{figure}[htb]
 	\centering
+	\includegraphics[width=0.7\linewidth]{imagens/docker-stages}
+	\caption{Fluxo de disponibilização de Imagem Docker}
+	Fonte: OCTO Technology\footnotemark	
+	\label{fig:docker-stages}
 	
-	\includegraphics[width=0.8\linewidth]{imagens/dockerXvm}
-	\caption{Comparativo Docker x Máquinas Virtuais}
-	Fonte: Bright Computing\footnotemark
-	\label{fig:dockerXvm}
-	
-	\footnotetext{Disponível em: http://www.brightcomputing.com/blog/containerization-vs.-virtualization-heres-our-blog-smackdown}
+	\footnotetext{Disponível em: https://blog.octo.com/en/docker-registry-first-steps/}
 \end{figure}
-
-	
-
 
 \subsection{Puppet}
 É uma ferramenta de código livre para gestão de configurações. A ideia central do Puppet\footnote{Disponível em https://www.puppet.com/} é a administração de diversas máquinas físicas ou virtuais, onde a configuração é centralizada em um único nó e então distribuídas por diversos nós na rede, assim, gerenciando configurações, automatizando instalação de pacotes e facilitando o estabelecimento de normas e auditoria.\cite{walberg2008automate}
@@ -217,5 +225,77 @@ Um recurso interessante é o uso de Forks (recurso do GitHub), que permitem a cr
 \item Comunidade ativa;
 \item Integra outras ferramentas por meio de plugins nativos.
 \end{itemize}
+
+\subsection{Sonar}
+
+O SonarQube é uma plataforma de análise da qualidade do código, com ele é possível avaliar por meio de dados estatísticos o desempenho de determinada aplicação quanto aos testes realizados utilizando diversas métricas. 
+
+A qualidade do código é verificada através de alguns eixos, sendo esses, a arquitetura, duplicações de código, complexidade, regras de codificação, comentários, testes unitários e erros em potencial.
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.5\linewidth]{imagens/7axes_sonar}
+	\caption{7 Eixos de Análise do Sonar}
+	Fonte: Blog Gabriel Amorim\footnotemark
+	\label{fig:7axessonar}
+\end{figure}
+	\footnotetext{Disponível em: http://blog.gabrielamorim.com/analisando-a-qualidade-do-codigo-com-o-sonar/}
+
+O Sonar tem compatibilidade com diversas linguagens, e plugins para vários serviços como Jenkins, por exemplo. Assim, é possível através da execução de uma determinada tarefa, definir métricas de análise, monitorar todo o processo e como retorno disponibilizar dados estatísticos referente a cada teste executado.
+
+Vantagens:
+\begin{itemize}
+	\item Fácil acompanhamento da evolução do código;
+	\item Representação dos dados através de gráficos;
+	\item Uso simples da ferramenta.
+\end{itemize}
+
+\subsection{Kubernetes}
+
+O Kubernetes é um sistema destinado à orquestração de contêineres. É perfeitamente associável a ferramentas como Docker, Rocket, Jenkins, Chef, Puppet e Ansible. O seu objetivo é retirar o peso de execução de determinado contêiner em uma única instância do serviço, para isso o Kubernetes cria nós ou slaves diferentes e distribui a execução da tarefa entre esses nós. A figura 7 demonstra a arquitetura comum do Kubernetes.
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=1\linewidth]{imagens/kubernetes}
+	\caption{Arquitetura do Kubernetes}
+	Fonte: King Host\footnotemark
+	\label{fig:kubernetes}
+\end{figure}
+	\footnotetext{Disponível em: https://king.host/blog/2018/05/introducao-ao-kubernetes/}
+
+Instituições como \textit{Google}\footnote{Disponível em: www.google.com.br} revelaram que utilizam  contêineres em serviços como \textit{Gmail} e \textit{Google Docs}, nesses são mais de 2 bilhões de implantações por semana, essa dinâmica é gerida pelo Borg, e essa mesma ferramenta foi precursora do Kubernetes. Em 2015 foi doada para a \textit{"Native Computing Foundation"} e \textit{"Linux Foundation"}, sendo a partir disso um projeto open source.\cite{trucco}
+
+A sua arquitetura pode ser definida como:
+\begin{itemize}
+\item \textbf{Master:} é a instância central que provê uma determinada aplicação com configurações específicas.
+\item \textbf{Cluster: }conjunto dos componentes. Na figura 7 percebemos a criação de um cluster.
+\item \textbf{Node:} Uma máquina ativa gerenciada pelo master, pode também ser mencionada como minions ou slaves.
+\item \textbf{Pods:} menores unidades implantadas que podem ser criadas, escaladas e manuseadas. É uma coleção lógica de contêineres que pertencem a uma aplicação.
+\end{itemize}
+
+O principal motivo que atrai desenvolvedores para o uso do Kubernetes é viabilizar aos clusters abranger alocações em clouds públicas, privadas ou híbridas, e mais especificamente ainda, quando essa arquitetura envolve uma gama elevada de contêineres, o que exige que a ferramenta seja obrigatoriamente auto-escalável e proporcione alta disponibilidade.
+
+\subsubsection{MiniKube}
+O manuseio do Kubernetes é mais complexo do que seu concorrente direto \textit{Docker Swarm}\footnote{Disponível em: https://docs.docker.com/engine/swarm/}, demanda mais conhecimento de redes e sistemas distribuídos do arquiteto projetista do ambiente.
+
+Pensando nisso a comunidade criou o Minikube\footnote{Disponível em: https://kubernetes.io/docs/setup/minikube/}, que basicamente é uma Toolkit que reúne uma série de soluções que facilitam muito a implantação do Kubernetes, isso tornou a aplicabilidade mais abrangente, sendo possível o uso em plataformas Windows, Linux e Mac. Nesse caso, o Minikube simula um nó com tudo o que é preciso já instalado e configurado.
+
+
+Vantagens:
+\begin{itemize}
+\item Fácil manipulação de contêineres;
+\item Escalonamento da aplicação;
+\item Volumes persistentes;
+\item Auto regeneração;
+\item Abstração de complexidade.
+\end{itemize}
+
+Desvantagens:
+\begin{itemize}
+\item Pouca documentação disponível para iniciantes;
+\item Curva de aprendizado longa;
+
+\end{itemize}
+
 
 
