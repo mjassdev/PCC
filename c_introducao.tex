@@ -13,6 +13,40 @@ A concepção de um modelo de entrega contínua que permita ganho na produtivida
 
 O presente projeto tem como foco a formulação de uma arquitetura que permita essa entrega contínua e automatizada no que diz respeito o \textit{deploy} de aplicações em tempo consideravelmente reduzido. Passa-se antes pelo estudo das diversas ferramentas disponíveis no mercado de software, a fim de levantar as possibilidades de aplicação nesse modelo.
 
-É vital então percebermos a real vantagem no uso do modelo baseado na visão DevOps, a redução na carga de trabalho e a comunicação massiva entre os times de infraestrutura e desenvolvimento dentro de um mesmo projeto, isso resulta na entrega ágil do produto trabalhado.
+Dessa forma é vital perceber a real vantagem no uso do modelo baseado na visão DevOps, a redução na carga de trabalho e a comunicação massiva entre os times de infraestrutura e desenvolvimento dentro de um mesmo projeto, isso resulta na entrega ágil do produto trabalhado.
 
 A estrutura desse trabalho está organizado da seguinte forma: Na seção 2 a justificativa. Na seção 3 a problemática que envolve o tema. Na seção 4 os objetivos geral e específicos. Na seção 5 será apresentado o referencial teórico utilizado para embasar o tema e a ideia proposta, de acordo com todas as ferramentas estudadas. Na seção 6 serão apresentados os métodos utilizados para compor o estudo, assim como as ferramentas utilizadas durante todo o processo. Por fim, menciona-se as referências utilizadas no referido estudo.
+
+\section{Objetivos}\label{cap:c_objetivos}
+
+\subsection{Objetivo Geral }
+Prover uma arquitetura integrada de ferramentas visando a disponibilização de serviços e aplicações pela Universidade Estadual do Tocantins - UNITINS.
+
+
+\subsection{Objetivos Específicos}
+\begin{itemize}
+	\item Realizar estudos das principais ferramentas disponíveis;
+	\item Definir as métricas utilizadas para avaliar o desempenho da arquitetura proposta;
+	\item Detalhar as configurações e integrações de cada ferramenta que compõe a arquitetura.
+	\item Compreender a prática DevOps na resolução de um problema real.
+	\item Avaliar as vantagens e desvantagens da arquitetura proposta, bem como apontar a implantação da mesma em ambiente de produção.
+\end{itemize}
+
+\section{Problema}\label{cap:c_problema}
+
+A abordagem clássica de \textit{deploy}, torna o processo lento, estressante e caro, afinal o tempo tem valor. Uma das maiores problemáticas dessa forma de disponibilização é a dificuldade em permitir uma alteração de código e imediatamente depois a sua implementação, isso porque o tempo para realizar essa atualização não permite essa agilidade, a prática adotada geralmente reúne uma série de modificações ou novas funcionalidades e o deploy a medida que essas alterações vão sendo construídas, seja semanal, quinzenal ou qualquer que seja a métrica.
+
+Esse problema pode também ser conhecido como \textbf{"A Última Milha"}, ocorre na fase final do processo de desenvolvimento, após a validação dos requisitos e antes da implantação em produção. É exatamente nesse ponto onde são realizados os testes e homologação que o processo é notoriamente dispendioso, imagine gerir dezenas ou centenas de alterações no código onde a cobrança pela disponibilidade delas é imediata. A questão da última milha é mais notória quando adotamos uma visão macro do processo, passamos a perceber quanto tempo de se perde com etapas que podem ser automatizadas, e aliado a isso quanto recurso humano-financeiro poderia estar sendo aplicado em outra área. \cite{sato2014devops}
+
+Em se tratando do ambiente da UNITINS, o fato que destaca a necessidade da aplicação desse trabalho, pode ser notado pelo adoção de ambientes que fazem uso de máquinas virtuais (VM). Nessa situação, há a necessidade da instalação de um Sistema Operacional (S.O) sobre uma serviço de virtualização (\textit{hypervisor}) ou disponibilização de acesso externo, via SSH ou FTP. Essa arquitetura diz respeito a cada ambiente individualmente, ou seja, cada aplicação requer que essa configuração seja feita especificamente, assim, evidencia-se o desperdício de tempo reservado para construir cada cenário. Além disso, o uso de recurso computacional é mais elevado se comparado a outras tecnologias mais recentes como \textit{contêineres}, visto que as VMs executam um S.O independente e consequentemente utilizam \textit{kernel} próprio, levando-se em consideração a execução de várias máquinas virtuais no mesmo servidor físico percebemos a necessidade de mais poder de processamento e maior uso de memória.\cite{laureano2006maquinas}
+
+
+\section{Justificativa}\label{cap: justificativa}
+
+A visão DevOps traz consigo o ideal de produtividade pela automatização na entrega de um serviço ou aplicação. Aliado a essa proposta, a Integração Contínua (CI) dá suporte para que todo o processo de construção ou \textit{build} de um código-fonte possa ser realizado de forma automatizada, desde a implantação do ambiente aos testes unitários e de integração, tal prática retira tanto da equipe de desenvolvimento quanto de infra o peso e tempo gasto no ato de disponibilizar essa aplicação para produção\cite{nathan2017}.
+
+Fazer uso dessa abordagem possibilita aos times mencionados um retorno rápido acerca das alterações que estão continuamente sendo realizadas no código de um projeto, além de viabilizar uma forma mais barata de resolver problemas relacionados a falhas, quando identificadas.
+
+Dessa maneira tem-se não somente a mudança do processo em si, mas, mais pontualmente uma mudança cultural. A aplicação de uma visão DevOps traz melhorias frente a compilação do código, testes automatizados, empacotamento, criação de ambientes para teste e produção, configuração da infraestrutura, migração de dados, monitoramento, auditoria, segurança, deploy, entre outros. Algumas empresas que fizeram uso das práticas DevOps passaram a ter \textit{feedbacks }significativos quanto a adaptação das mudanças do mercado, realizando diversos \textit{deploys} por dia de forma segura.\cite{sato2014devops}
+
+Em se tratando do cenário universitário, é fundamental que a instituição corra na mesma velocidade em que as novas tecnologias surgem, em se tratando de cursos de Tecnologia da Informação isso se torna latente. Novas e boas práticas devem ser experimentadas pelos alunos, a Integração Contínua pode ser aplicada largamente para fins de estudo e experimentos, além de entenderem a vantagem do uso da automatização, podem investir um tempo maior para o desenvolvimento da aplicação.
