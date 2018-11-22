@@ -28,7 +28,7 @@ Dessa forma, alguns requisitos foram considerados na escolha, os pontos citados 
 
 \section{Materiais Utilizados}
 
-Tomando por base os critérios mencionados acima, utilizou-se as seguintes ferramentas detalhadas na Tabela 2.
+Tomando por base os critérios mencionados acima, utilizou-se as seguintes ferramentas detalhadas na Tabela \ref{tab:ferramentas}.
 
 
 \begin{table}[htb]
@@ -46,8 +46,9 @@ Tomando por base os critérios mencionados acima, utilizou-se as seguintes ferra
 		Jenkins                          & 2.11.2                                        \\ \hline
 		Kubernetes                          & Plugin Jenkins - Minikube Versão 1.11                                           \\ \hline
 	\end{tabular}
-\label{tab:ferramentas}
+
 \caption{Ferramentas utilizadas}
+\label{tab:ferramentas}
 \end{table}
 
 \begin{itemize}
@@ -115,7 +116,20 @@ Na raiz do projeto estão os arquivos de configuração do Jenkins. Nesses, esta
 
 \subsection{Pipeline do Build}\label{subsection:pipebuild}
 
-Para início do processo de \textit{build} do código, é necessário antes de tudo que esteja disponível um repositório de versionamento de códigos, definido aqui com a plataforma do GitHub. Essa sinalização será concebida por meio de um \textit{FAD}. Esse formulário será disponibilizado por um endereço web, onde é premissa que o usuário já possua um repositório para o projeto no GitHub, e preencha os demais campos solicitados do formulário. É requerido desde o nome do responsável pelo projeto até as dependências necessária para execução do mesmo. Essa busca pelos Jobs são feitas pela API do Jenkins semelhantemente ao REST.
+Para início do processo de \textit{build} do código, é necessário antes de tudo que esteja disponível um repositório de versionamento de códigos, definido aqui com a plataforma do GitHub. Essa sinalização será concebida por meio de um \textit{FAD}, ver Figura \ref{fig:formulario}. Esse formulário será disponibilizado por um endereço web, onde é premissa que o usuário já possua um repositório para o projeto no GitHub, e preencha os demais campos solicitados do formulário. É requerido desde o nome do responsável pelo projeto até as dependências necessária para execução do mesmo. Essa busca pelos Jobs são feitas pela API do Jenkins semelhantemente ao REST.
+
+
+\par
+\vspace{2cm}
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=1\linewidth]{imagens/formulario}
+	\caption{Modelo de Formulário de Solicitação de Ambiente de Desenvolvimento}
+	Fonte: Acervo próprio
+	\label{fig:formulario}
+\end{figure}
+
+
 
 Nesse sentido a API pode ser usada para:
 
@@ -151,7 +165,7 @@ De maneira a organizar o pipeline do processo de criação dos \textit{jobs }e \
 A partir do momento que o ambiente é provisionado pelo Ansible, o pipeline é refeito utilizando os \textit{playbooks} de \textit{Jobs} para atualização de novos projetos, e \textit{Builds} para construção do código já atribuído a um \textit{Job}.
 
     \vspace*{2cm}
-O Algoritmo 1 faz menção a execução do playbook inicial do Ansible, nele será solicitado a execução de cada um dos demais playbooks que dizem respeito aos serviços necessário para o ambiente:
+O Algoritmo \ref{alg:algoritmo01} faz menção a execução do playbook inicial do Ansible, nele será solicitado a execução de cada um dos demais playbooks que dizem respeito aos serviços necessário para o ambiente:
 
 \begin{algorithm}[H]
 	\SetAlgoLined
@@ -164,11 +178,12 @@ O Algoritmo 1 faz menção a execução do playbook inicial do Ansible, nele ser
 			execute o playbook jenkins	\\					  
 	}
 	\Retorna{Ambiente provisionado}
-	\label{alg:algoritmo01}
+
 	\caption{\textsc{Provisionamento de Ambiente}}
+		\label{alg:algoritmo01}
 \end{algorithm}
 \newpage 
-O Algoritmo 2 trata da execução de cada playbook de serviço, onde verifica-se cada função que trata as dependências exigidas para que esse serviço possa funcionar:
+O Algoritmo \ref{alg:algoritmo02} trata da execução de cada playbook de serviço, onde verifica-se cada função que trata as dependências exigidas para que esse serviço possa funcionar:
 
 \begin{algorithm}[H]
 	\SetAlgoLined
@@ -188,12 +203,13 @@ O Algoritmo 2 trata da execução de cada playbook de serviço, onde verifica-se
 	execute todas as funções					  
 	}
 	\Retorna{Instalação de serviço}
-	\label{alg:algoritmo02}
+
 	\caption{\textsc{Instalação de serviço}}
+		\label{alg:algoritmo02}
 \end{algorithm}
 
     \vspace*{2cm}
-O Algoritmo 3 busca por Jobs em um diretório mapeado pelo contêiner Docker de cada serviço, nesse diretório serão armazenados os arquivos .json gerados com o preenchimento do formulário de solicitação de ambiente de desenvolvimento:	
+O Algoritmo \ref{alg:algoritmo03} busca por Jobs em um diretório mapeado pelo contêiner Docker de cada serviço, nesse diretório serão armazenados os arquivos .json gerados com o preenchimento do formulário de solicitação de ambiente de desenvolvimento:	
 
 \begin{algorithm}[H]
 	\SetAlgoLined
@@ -212,12 +228,13 @@ O Algoritmo 3 busca por Jobs em um diretório mapeado pelo contêiner Docker de 
 		}				  
 	}
 	\Retorna{\textit{Jobs}}
-	\label{alg:algoritmo03}
+
 	\caption{\textsc{Jobs - Funcionalidade: Busca por Jobs}}
+		\label{alg:algoritmo03}
 \end{algorithm}
 
     
-O Algoritmo 4 trata da execução dos Jobs no Jenkins, onde passa pela busca de jobs no diretório, baixa o código do repositório git informado no formulário, gera uma nova versão do código e se autorizado pelo gestor, executa o contêiner:	
+O Algoritmo \ref{alg:algoritmo04} trata da execução dos Jobs no Jenkins, onde passa pela busca de jobs no diretório, baixa o código do repositório git informado no formulário, gera uma nova versão do código e se autorizado pelo gestor, executa o contêiner:	
 
 \begin{algorithm}[H]
 	\SetAlgoLined
@@ -245,8 +262,9 @@ O Algoritmo 4 trata da execução dos Jobs no Jenkins, onde passa pela busca de 
 		  }
 	}
 
-	\label{alg:algoritmo04}
+
 	\caption{\textsc{Ansible - Jenkins - Docker: \textit{Build} e \textit{Job}}}
+		\label{alg:algoritmo04}
 \end{algorithm}
 
 
@@ -254,7 +272,7 @@ O Algoritmo 4 trata da execução dos Jobs no Jenkins, onde passa pela busca de 
     \pagebreak[4]
 \section{Métricas}
 
-A definição de mecanismos que forneçam e possibilitem a análise estatística de todo o processo é fundamental dentro deste projeto. Nesse sentido, o uso de métricas se faz necessário para que se tenha uma visão próxima de cada processo de \textit{deploy}. Assim, adota-se neste trabalho, as seguintes métricas detalhas na Tabela ??.
+A definição de mecanismos que forneçam e possibilitem a análise estatística de todo o processo é fundamental dentro deste projeto. Nesse sentido, o uso de métricas se faz necessário para que se tenha uma visão próxima de cada processo de \textit{deploy}. Assim, adota-se neste trabalho, as seguintes métricas detalhas na Tabela \ref{table:metricas}.
 
 
 \begin{table}[h]
@@ -267,9 +285,31 @@ A definição de mecanismos que forneçam e possibilitem a análise estatística
 		\begin{tabular}[c]{@{}l@{}}Desempenho frente a múltiplos\\ deploys\end{tabular} & \begin{tabular}[c]{@{}c@{}}Medição do desempenho obtido frente\\ à um estresse de deploys simultâneos\end{tabular} \\ \hline
 		\begin{tabular}[c]{@{}l@{}}Recurso computacional \\consumido utilizando diferentes\\instâncias de Slaves.\end{tabular} & \begin{tabular}[c]{@{}c@{}}Quantidade de recursos de memória e processamento\\utilizados entre os slaves para concluir a tarefa iniciada.\end{tabular} \\ \hline
 	\end{tabular}
-\label{table:metricas}
+
 \caption{Métricas Definidas}
+\label{table:metricas}
 \end{table}
 
 
 Os resultados das métricas definidas são importantes pois com isso é possível ter noção muito próxima da "saúde" do código, pontos de fragilidade, potenciais melhorias, eventuais de melhorias nos recursos físicos e previsão de tempo de entrega de uma funcionalidade. Esses pontos dão suporte para tomadas de decisões por parte do gestor do projeto. Em se tratando do SonarQube a própria ferramenta já traz uma série de métricas pré-definidas e genéricas que podem ser aplicadas aos mais diversos tipos de jobs, e nesse ponto é importante ressaltar que é possível a criação de \textit{scripts} específicos de testes de acordo com o tipo de tarefa que está sendo executada no \textit{build}, no entanto o foco aqui não foi a implementação dos testes, mas sim a provisão do ambiente de automatização.
+
+\section{Cronograma de Atividades}
+
+O presente projeto foi concebido com base em um planejamento de atividades definidas a fim de se levantar prazos e metas num dado período de tempo que compreende como início o mês de Julho de 2018 e com término em Dezembro de 2018. Nesse sentido, o cronograma apresentado na Tabela \ref{tab:cronograma} , ilustra todo o ritmo e etapas definidas, assim como em qual período cada atividade foi iniciada e concluída.
+
+\begin{table}[htb]
+
+\begin{tabular}{|l|c|l|l|l|l|l|}
+	\hline
+	\multicolumn{1}{|c|}{\textbf{DESCRIÇÃO DA ATIVIDADE}}                                                             & \textbf{\begin{tabular}[c]{@{}c@{}}JUL/\\ 2018\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}AGO/\\ 2018\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}SET/\\ 2018\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}OUT/\\ 2018\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}NOV/\\ 2018\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}DEZ/\\ 2018\end{tabular}} \\ \hline
+	\begin{tabular}[c]{@{}l@{}}Pesquisas sobre ferramentas\\ disponíveis para integração\\ contínua\end{tabular}      & \cellcolor[HTML]{3531FF}                                     & \cellcolor[HTML]{3531FF}                                     &                                                              &                                                              &                                                              &                                                              \\ \hline
+	\begin{tabular}[c]{@{}l@{}}Definição das ferramentas a\\ serem utilizadas no projeto\end{tabular}                 &                                                              & \cellcolor[HTML]{3531FF}                                     &                                                              &                                                              &                                                              &                                                              \\ \hline
+	\begin{tabular}[c]{@{}l@{}}Testes de configuração\\ de ambiente da arquitetura\\ proposta\end{tabular}            &                                                              &                                                              & \cellcolor[HTML]{3531FF}                                     & \cellcolor[HTML]{3531FF}                                     &                                                              &                                                              \\ \hline
+	\begin{tabular}[c]{@{}l@{}}Inicio de testes individuais\\ das ferramentas definidas\\ para o projeto\end{tabular} &                                                              &                                                              &                                                              & \cellcolor[HTML]{3531FF}{\color[HTML]{000000} }              & \cellcolor[HTML]{3531FF}{\color[HTML]{000000} }              &                                                              \\ \hline
+	\begin{tabular}[c]{@{}l@{}}Revisão do projeto e\\ apresentação à banca\\ avaliadora.\end{tabular}                 & \multicolumn{1}{l|}{}                                        &                                                              &                                                              &                                                              &                                                              & \cellcolor[HTML]{3531FF}                                     \\ \hline
+\end{tabular}
+
+	\caption{Cronograma de Atividades}
+		\label{tab:cronograma}
+\end{table}
+
